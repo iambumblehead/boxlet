@@ -18,6 +18,7 @@ For tablets, phones and older IE browsers... in many use-cases beast performs wi
 
 Boxlet originates from a single-page checkout developed for [Ties.com][4]. Shipping, billing etc -each stage of the checkout process used a different box -this increased conversions.
 
+[0]: http://www.bumblehead.com                            "bumblehead"
 [1]: https://github.com/iambumblehead/boxlet/raw/master/img/boxlet-animation-1.png
 [2]: https://github.com/iambumblehead/boxlet/raw/master/img/boxlet-animation-2.png
 [3]: https://github.com/iambumblehead/beast
