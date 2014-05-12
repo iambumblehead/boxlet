@@ -62,23 +62,23 @@ Tests are not automated and are performed by loading a document in the browser a
 
 The demo boxlet uses the following markup:
 ```html
-    <div id="Boxlet" class="boxlet st-content-preview">
-      <div id="BoxTitle" class="boxlet-title">
-        title
-      </div>
+<div id="Boxlet" class="boxlet st-content-preview">
+  <div id="BoxTitle" class="boxlet-title">
+    title
+  </div>
 
-      <div id="BoxContentPrev" class="boxlet-content-preview st-show-open">
-        <div class="boxlet-content-preview-bd">
-          <p>content</p>
-        </div>
-      </div>
-
-      <div id="BoxContentFull" class="boxlet-content-main st-show-shut">
-        <div class="boxlet-content-main-bd">
-          content main
-        </div>
-      </div>
+  <div id="BoxContentPrev" class="boxlet-content-preview st-show-open">
+    <div class="boxlet-content-preview-bd">
+      <p>content</p>
     </div>
+  </div>
+
+  <div id="BoxContentFull" class="boxlet-content-main st-show-shut">
+    <div class="boxlet-content-main-bd">
+      content main
+    </div>
+  </div>
+</div>
 ```
 
 When markup is available in the document, include boxlet scripts and call them:
