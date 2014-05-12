@@ -1,5 +1,5 @@
 // Filename: boxlet.js
-// Timestamp: 2014.05.11-17:56:59 (last modified)  
+// Timestamp: 2014.05.11-21:11:05 (last modified)  
 // Author(s): Bumblehead (www.bumblehead.com)
 // Requires: lsn.js, lockfn.js, elemst.js, domev.js,
 // beast.js, beastshape.js, beastfade.js, beastcolor.js, beastmove.js
@@ -36,7 +36,7 @@
 // +-----------------------------+
 //
 // +-----------------------------+
-// |▓ boxlet ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓ - ▓|
+// |  boxlet                  -  |
 // |▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓|
 // |▓▓▓▓ full content ▓▓▓▓▓▓▓▓▓▓▓|
 // |▓▓▓▓ foo bar baz ▓▓▓▓▓▓▓▓▓▓▓▓|
@@ -44,7 +44,7 @@
 // +-----------------------------+
 
 
-var boxlet = (function (boxengine) {
+var boxlet = ((typeof module === 'object') ? module : {}).exports = (function (boxengine) {
 
 
   boxengine = (function () {
