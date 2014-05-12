@@ -1,0 +1,30 @@
+{
+  "name": "boxlet",
+  "version": "0.0.1",
+  "readmeFilename": "README.md",
+  "description": "an animated box. fade out, open, fade in. fade in, close, fade out.",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/iambumblehead/boxlet.git"
+  },
+  "keywords": [
+    "animated",
+    "transition",
+    "ease",
+    "container"
+  ],
+  "dependencies" : {
+      "eventhook" : ">=0.0.1",
+      "lsn" : ">=0.0.1",
+      "domev" : ">=0.0.1",
+      "lockfn" : ">=0.0.1",
+      "beast" : "~0.0.x"
+  },
+  "devDependencies" : {
+      "scroungejs" : ">=0.0.1",
+      "ncp" : ">=0.0.1"
+  },
+  "scripts" : {
+      "start" : "node test/testrun.js"
+  }
+}
