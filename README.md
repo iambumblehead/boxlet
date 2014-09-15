@@ -47,8 +47,8 @@ Run `npm start` to build a sample boxlet page and to see an advanced component c
 
 
 [3]: https://github.com/iambumblehead/scroungejs          "scroungejs"
-[6]: http://github.com/iambumblehead/boxlet/raw/master/boxlet.min.js
-[7]: http://github.com/iambumblehead/boxlet/raw/master/boxlet.unmin.js
+[6]: https://github.com/iambumblehead/boxlet/raw/master/boxlet.min.js
+[7]: https://github.com/iambumblehead/boxlet/raw/master/boxlet.unmin.js
 
 ---------------------------------------------------------
 #### <a id="test"></a>Test:
@@ -96,7 +96,7 @@ For synchronized boxlet animation see the test files.
 ---------------------------------------------------------
 #### <a id="license">License:
 
- ![scrounge](http://github.com/iambumblehead/scroungejs/raw/master/img/hand.png) 
+ ![scrounge](https://github.com/iambumblehead/scroungejs/raw/master/img/hand.png) 
 
 (The MIT License)
 
