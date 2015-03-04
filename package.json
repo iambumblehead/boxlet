@@ -1,6 +1,6 @@
 {
   "name": "boxlet",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "readmeFilename": "README.md",
   "description": "an animated box. fade out, open, fade in. fade in, close, fade out.",
   "repository": {
