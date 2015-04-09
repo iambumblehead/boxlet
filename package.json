@@ -1,6 +1,6 @@
 {
   "name": "boxlet",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "readmeFilename": "README.md",
   "description": "an animated box. fade out, open, fade in. fade in, close, fade out.",
   "repository": {
@@ -17,7 +17,7 @@
       "eventhook" : ">=0.0.1",
       "lsn" : ">=0.0.1",
       "domev" : ">=0.0.1",
-      "lockfn" : ">=0.0.1",
+      "lockfn" : "=0.1.x",
       "beast" : "~0.0.x"
   },
   "devDependencies" : {

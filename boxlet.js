@@ -1,5 +1,5 @@
 // Filename: boxlet.js
-// Timestamp: 2014.05.11-21:11:05 (last modified)  
+// Timestamp: 2015.04.08-19:28:48 (last modified)  
 // Author(s): Bumblehead (www.bumblehead.com)
 // Requires: lsn.js, lockfn.js, elemst.js, domev.js,
 // beast.js, beastshape.js, beastfade.js, beastcolor.js, beastmove.js
@@ -267,7 +267,7 @@ var boxlet = ((typeof module === 'object') ? module : {}).exports = (function (b
       var that = this, 
           boxTitleElem = that.getTitleElem();
 
-      that.reboundfn = lockfn.Rebounding.getNew();
+      that.reboundfn = lockfn.rebounding.getNew();
 
       lsn(boxTitleElem, 'click', function (e) {
         that.reboundSwitchState();
