@@ -1,5 +1,5 @@
 // Filename: boxlet.js
-// Timestamp: 2015.05.28-11:09:11 (last modified)  
+// Timestamp: 2015.05.28-11:32:25 (last modified)  
 // Author(s): Bumblehead (www.bumblehead.com)
 // Requires: lsn.js, lockfn.js, elemst.js, domev.js,
 // beast.js, beastshape.js, beastfade.js, beastcolor.js, beastmove.js
@@ -68,12 +68,12 @@ var boxlet = ((typeof module === 'object') ? module : {}).exports = (function (b
           beast.fade({
             classNameEnd : 'vis-hide',
             ease : 'end',
-            elem : that.getContentFullElem(box), 
+            elem : beast.getContentFullElem(box), 
             endop : 0
           }).fade({
             classNameEnd : 'vis-hide',
             ease : 'end',
-            elem : that.getContentPrevElem(box), 
+            elem : beast.getContentPrevElem(box), 
             endop : 0
           });
         }
@@ -89,11 +89,11 @@ var boxlet = ((typeof module === 'object') ? module : {}).exports = (function (b
         if (box) {
           beast.fade({
             classNameEnd : 'vis-show',
-            elem : that.getContentFullElem(box), 
+            elem : beast.getContentFullElem(box), 
             endop : 100
           }).fade({
             classNameEnd : 'vis-show',
-            elem : that.getContentPrevElem(box), 
+            elem : beast.getContentPrevElem(box), 
             endop : 100
           });
         }
@@ -107,12 +107,12 @@ var boxlet = ((typeof module === 'object') ? module : {}).exports = (function (b
 
         if (box) {
           beast.shape({
-            elem : that.getContentFullElem(box),
+            elem : beast.getContentFullElem(box),
             ease : 'end',
             whend : [null,0],
             classNameEnd : 'show-shut'
           }).shape({
-            elem : that.getContentPrevElem(box),
+            elem : beast.getContentPrevElem(box),
             ease : 'end',
             whbgn : [null,0],
             classNameEnd : 'show-open'
@@ -128,12 +128,12 @@ var boxlet = ((typeof module === 'object') ? module : {}).exports = (function (b
 
         if (box) {
           beast.shape({
-            elem : that.getContentFullElem(box),
+            elem : beast.getContentFullElem(box),
             ease : 'end',
             whbgn : [null,0],
             classNameEnd : 'show-open'
           }).shape({
-            elem : that.getContentPrevElem(box),
+            elem : beast.getContentPrevElem(box),
             ease : 'end',
             whend : [null,0],
             classNameEnd : 'show-shut'
@@ -167,11 +167,11 @@ var boxlet = ((typeof module === 'object') ? module : {}).exports = (function (b
       that.beast = beast(opts);
 
       if (opts.getContentPrevElem) {
-        that.getContentPrevElem = opts.getContentPrevElem;
+        that.beast.getContentPrevElem = opts.getContentPrevElem || that.getContentPrevElem;
       }
 
       if (opts.getContentFullElem) {
-        that.getContentFullElem = opts.getContentFullElem;
+        that.beast.getContentFullElem = opts.getContentFullElem || that.getContentFullElem;
       }      
 
       return that;
