@@ -1,6 +1,6 @@
 boxlet
 ======
-**(c)[Bumblehead][0], 2014** [MIT-license](#license)
+**(c)[Bumblehead][0], 2014,2015** [MIT-license](#license)
 
 ### Overview:
 

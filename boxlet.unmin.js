@@ -348,7 +348,7 @@ var elemst = {
   }
 };
 // Filename: beastplug.js  
-// Timestamp: 2013.12.26-21:24:57 (last modified)  
+// Timestamp: 2015.03.03-16:16:39 (last modified)  
 // Author(s): Bumblehead (www.bumblehead.com)  
 // Requires: elemst.js, beast.js
 
@@ -366,6 +366,13 @@ var beastplug = function (name, augmfn) {
     },
     getComputed : function (elem, style) {
       return getComputedStyle(elem, null).getPropertyValue(style);
+    },
+    getasfilleddimarr : function (arr1, arr2) {
+      var isarr = Array.isArray;
+      return [
+        isarr(arr1) && typeof arr1[0] === 'number' ? arr1[0] : arr2[0],
+        isarr(arr1) && typeof arr1[1] === 'number' ? arr1[1] : arr2[1]
+      ];
     },
     isanimated : function (arr1, arr2, i) {
       return arr1[i] !== arr2[i];
@@ -475,7 +482,7 @@ var curved = (function () {
 
 }());
 // Filename: beastmove.js  
-// Timestamp: 2013.12.26-21:23:51 (last modified)  
+// Timestamp: 2015.03.03-16:18:22 (last modified)  
 // Author(s): Bumblehead (www.bumblehead.com)  
 // Requires: curved.js, elemst.js, beastplug.js, domlt.js
 //
@@ -496,8 +503,8 @@ beastplug('move', function (b) {
     var elem = opts.elem,
         ease = opts.ease,
         ltcur = domlt(elem),
-        ltbgn = opts.ltbgn || ltcur,
-        ltend = opts.ltend || ltcur,
+        ltbgn = b.getasfilleddimarr(opts.ltbgn, ltcur),
+        ltend = b.getasfilleddimarr(opts.ltend, ltcur),
         ltarr = [],
         isl = b.isanimated(ltbgn, ltend, 0),
         ist = b.isanimated(ltbgn, ltend, 1),
@@ -730,12 +737,12 @@ beastplug('fade', function (b) {
 
 });
 // Filename: domwh.js  
-// Timestamp: 2013.12.24-17:03:48 (last modified)  
+// Timestamp: 2015.01.03-17:27:17 (last modified)  
 // Author(s): Bumblehead (www.bumblehead.com)  
 
 var domwh = (function (p, d, doc) {
 
-  doc = document;
+  doc = typeof document !== 'undefined' && doc;
 
   p = function(elem) {
     var d, dims = [elem.offsetWidth, elem.offsetHeight];
@@ -770,7 +777,7 @@ var domwh = (function (p, d, doc) {
 
 }());
 // Filename: beastshape.js  
-// Timestamp: 2013.12.26-21:24:02 (last modified)  
+// Timestamp: 2015.03.03-16:17:28 (last modified)  
 // Author(s): Bumblehead (www.bumblehead.com)  
 // Requires: curved.js, elemst.js, domwh.js, beastplug.js
 //
@@ -784,8 +791,8 @@ beastplug('shape', function (b) {
     var elem = opts.elem,
         ease = opts.ease,
         whcur = domwh(elem),
-        whbgn = opts.whbgn || whcur,
-        whend = opts.whend || whcur,
+        whbgn = b.getasfilleddimarr(opts.whbgn, whcur),
+        whend = b.getasfilleddimarr(opts.whend, whcur),
         wharr = [],
         isw = b.isanimated(whbgn, whend, 0),
         ish = b.isanimated(whbgn, whend, 1),
@@ -828,7 +835,7 @@ beastplug('shape', function (b) {
 });
 
 // Filename: domev.js
-// Timestamp: 2013.12.26-21:15:17 (last modified)  
+// Timestamp: 2015.02.23-11:51:35 (last modified)  
 // Author(s): Bumblehead (www.bumblehead.com)
 
 var domev = {
@@ -862,12 +869,19 @@ var domev = {
       }
     }
     return (domev.stopDefaultAt = fn)(e);
+  },
+  
+  hasElem : function (e, elem, evelem) {
+    evelem = this.getElemAt(e, elem);
+
+    return elem && evelem 
+        && (elem.isEqualNode(evelem) || elem.contains(evelem));  
   }
 };
 
 
 // Filename: lockfnthrottling.js
-// Timestamp: 2013.09.01-22:32:43 (last modified)  
+// Timestamp: 2015.04.08-18:22:12 (last modified)  
 // Author(s): Bumblehead (www.bumblehead.com)
 //
 //
@@ -882,7 +896,7 @@ var domev = {
 // lockFnThrottling(function () { console.log('go!') });
 
 var lockfnthrottling =
-  ((typeof module === 'object') ? module : {}).exports = (function () {
+  ((typeof module === 'object') ? module : {}).exports = (function (f) {
 
   var throttle = {
     ms : 500,
@@ -908,19 +922,23 @@ var lockfnthrottling =
     }
   };
 
-  return {
-    getNew : function (spec) {
-      var that = Object.create(throttle);
-      that.ms = spec.ms || 500;
-      that.timer = null;
-      that.lastFn = null;
-      return function (fn) { that.throttledFn(fn); };
-    }
+  f = function (spec) {
+    return f.getNew(spec);
   };
+
+  f.getNew = function (spec) {
+    var that = Object.create(throttle);
+    that.ms = spec.ms || 500;
+    that.timer = null;
+    that.lastFn = null;
+    return function (fn) { that.throttledFn(fn); };
+  };
+    
+  return f;
 
 }());
 // Filename: lockfnrebounding.js
-// Timestamp: 2014.05.11-10:19:16 (last modified)  
+// Timestamp: 2015.04.17-15:50:49 (last modified)  
 // Author(s): Bumblehead (www.bumblehead.com)
 //
 // first function is processed until a value is reached...
@@ -928,7 +946,7 @@ var lockfnthrottling =
 // useful for button press or form submission calls
 
 var lockfnrebounding =
-  ((typeof module === 'object') ? module : {}).exports = (function () {
+  ((typeof module === 'object') ? module : {}).exports = (function (f) {
 
   var cache = {
     flag : false,
@@ -939,22 +957,68 @@ var lockfnrebounding =
 
       if (flag === false) {
         that.flag = true;
-        fn(function () { that.flag = false; });        
+        if (typeof fn === 'function') {
+          fn(function () { that.flag = false; });
+        } else {
+          that.flag = false;
+        }
       }
     }
   };
 
-  return {
-    getNew : function () {
-      var that = Object.create(cache);
-      that.flag = false;
-      return function (fn) { that.go(fn); };
-    }
+  f = function (getvalfn) {
+    var rebound = f.getNew();
+
+    return function () {
+      var l = arguments.length,
+          fn = arguments[--l],      
+          args;
+
+      fn = typeof fn === 'function' ? fn : false;
+      args = [].slice.call(arguments, 0, fn ? l : ++l);
+
+      rebound(function (exitfn) {
+        args.push(function () {
+          exitfn();
+          if (typeof fn === 'function') {
+            fn.apply(l, arguments);
+          }
+        });
+
+        getvalfn.apply(l, args);
+      });
+    };
   };
 
+  f.getNew = function () {
+    var that = Object.create(cache);
+    that.flag = false;
+    return function (fn) { that.go(fn); };
+  };
+
+  return f;
+
 }());
+// Filename: lockfnexpiring.js
+// Timestamp: 2015.04.16-17:42:42 (last modified)  
+// Author(s): Bumblehead (www.bumblehead.com)
+//
+// auto-call a function after given period of time has passed.
+// 
+// useful if your script waits on a response from a server -expire
+// the wait function after a few seconds.
+
+
+var lockfnexpiring = function (fn, expirems) {
+  var fnopen = true,
+      expirefn = function () { fnopen && !(fnopen = false) && fn(); };
+
+  setTimeout(expirefn, expirems);
+
+  return expirefn;
+};
 // Filename: lockfnqueuing.js
-// Timestamp: 2013.09.01-22:32:08 (last modified)  
+// Timestamp: 2015.04.11-03:20:30 (last modified)  
 // Author(s): Bumblehead (www.bumblehead.com)
 //
 // the returned function stores mulitple callbacks and processes them one after
@@ -968,8 +1032,8 @@ var lockfnrebounding =
 //   exitFn(null, x);
 // });
 
-var lockfnqueuing =
-  ((typeof module === 'object') ? module : {}).exports = (function () {
+var lockfnqueuing = 
+      ((typeof module === 'object') ? module : {}).exports = (function (f) {
 
   var cache = {
     isActive : false,
@@ -1006,21 +1070,39 @@ var lockfnqueuing =
     }
   };
 
-  return {
-    getNew : function () {
-      var that = Object.create(cache);
-      that.isActive = false;
-      that.fnArr = [];
-      that.getValArr = [];
-      return function (onValFn, getValFn) { 
-        that.queueAdd(onValFn, getValFn); 
-      };
-    }
+  f = function (getvalfn) {
+    var o = function () {
+      var l = arguments.length,
+          fn = arguments[--l],
+          args = [].slice.call(arguments, 0, l);
+
+      if (typeof fn !== 'function') {
+        throw new Error('last param must be function');
+      }
+
+      o.lock(fn, function (exitfn) {
+        args.push(exitfn);
+        getvalfn.apply(l, args);
+      });
+    };
+    return (o.lock = f.getNew()) && o;
   };
+
+  f.getNew = function () {
+    var that = Object.create(cache);
+    that.isActive = false;
+    that.fnArr = [];
+    that.getValArr = [];
+    return function (onValFn, getValFn) { 
+      that.queueAdd(onValFn, getValFn); 
+    };
+  };
+
+  return f;
 
 }());
 // Filename: lockfncaching.js
-// Timestamp: 2013.09.01-22:31:53 (last modified)  
+// Timestamp: 2015.04.11-03:30:08 (last modified)  
 // Author(s): Bumblehead (www.bumblehead.com)
 //
 // gets a value with getValFn, then calls onValFn(err, res)
@@ -1028,7 +1110,7 @@ var lockfnqueuing =
 // a value that is once-only generated by onValFun
 // 
 // --------------------------------------------------------
-// var fncaching = LockFnCaching.getNew();
+// var fncaching = lockfncaching.getNew();
 // var onValFn = function (err, val) {
 //   console.log(null, val);
 // };
@@ -1039,9 +1121,7 @@ var lockfnqueuing =
 // "null, 3"
 //
 
-
-var lockfncaching =
-  ((typeof module === 'object') ? module : {}).exports = (function () {
+var lockfncaching = (function (f) {
 
   var cache = {
     val : undefined,
@@ -1073,57 +1153,124 @@ var lockfncaching =
     }
   };
 
-  return {
-    getNew : function () {
-      var that = Object.create(cache);
-      that.isActive = false;
-      that.funcArr = [];
-      that.val = undefined;
-      return function (onValFunc, getValFunc) { 
-        that.cacheVal(onValFunc, getValFunc); 
-      };
-    },
+  // lock = lockfncaching.namespace(function (arg1, arg2, arg3, fn) {
+  //   doasync(arg1, arg2, arg3, fn);
+  // });
+  // 
+  // lock(a1, a2, a3, function (err, res) {
+  //   console.log(res);
+  // });
+  //
+  // lock(a1, a2, a3, function (err, cachedres) {
+  //   console.log(res);
+  // })
+  f = function (getvalfn) {
+    var o = function () {
+      var l = arguments.length,
+          fn = arguments[--l],
+          args = [].slice.call(arguments, 0, l);
 
-    getNamespaceCache : (function () {
-      var namespacesObj = {};
-      return function (namespace) {
-        return namespacesObj[namespace] ||
-          (namespacesObj[namespace] = this.getNew());
-      };
-    }()),
+      if (typeof fn !== 'function') {
+        throw new Error('last param must be function');
+      }
 
-    getNamespaceNew : function () {
-      var that = this, caching;
-      return function (namespace, onValFunc, getValFunc) { 
-        caching = that.getNamespaceCache(namespace);
-        caching(onValFunc, getValFunc); 
-      };
-    }
+      o.lock(fn, function (exitfn) {
+        args.push(exitfn);
+        getvalfn.apply(l, args);
+      });
+    };
+
+    return (o.clear = function () { 
+      return (o.lock = f.getNew()) && o;
+    })();
   };
+
+  // lock = lockfncaching.namespace(function (arg1, arg2, arg3_namespace, fn) {
+  //   doasync(arg1, arg2, arg3, fn);
+  // });
+  // 
+  // lock(a1, a2, a3, function (err, res) {
+  //   console.log(res);
+  // });
+  //
+  // lock(a1, a2, a3, function (err, cachedres) {
+  //   console.log(res);
+  // })
+  f.namespace = function (getvalfn) {
+    var o = function () {
+      var l = arguments.length,
+          fn = arguments[--l],
+          name = arguments[--l],
+          args = [].slice.call(arguments, 0, ++l);
+
+      if (typeof fn !== 'function') {
+        throw new Error('last param must be function');
+      } else if (typeof name !== 'string') { 
+        throw new Error('name param must be function');           
+      }
+
+      o.lock(name, fn, function (exitfn) {
+        args.push(exitfn);
+        getvalfn.apply(l, args);
+      });
+    };
+
+    return (o.clear = function () { 
+      return (o.lock = f.getNamespaceNew()) && o;
+    })();
+  };
+
+  f.getNew = function () {
+    var that = Object.create(cache);
+    that.isActive = false;
+    that.funcArr = [];
+    that.val = undefined;
+    return function (onValFunc, getValFunc) { 
+      that.cacheVal(onValFunc, getValFunc); 
+    };
+  };
+
+  f.getNamespaceCache = (function () {
+    return function (namespace, namespacesObj) {
+      return namespacesObj[namespace] ||
+        (namespacesObj[namespace] = f.getNew());
+    };
+  }());
+
+  f.getNamespaceNew = function () {
+    var namespacesobj = {};
+    return function (namespace, onValFunc, getValFunc) { 
+      f.getNamespaceCache(namespace, namespacesobj)(onValFunc, getValFunc);
+    };
+  };
+
+  return f;
 
 }());
 // Filename: lockfn.js
-// Timestamp: 2013.09.05-19:26:00 (last modified)  
+// Timestamp: 2015.04.17-16:29:19 (last modified)  
 // Author(s): Bumblehead (www.bumblehead.com)
-// Requires: lockfncaching.js, lockfnqueuing.js, 
-// lockfnrebounding.js, lockfnthrottling.js
+// Requires: 
+// lockfncaching.js, 
+// lockfnqueuing.js, 
+// lockfnexpiring.js,
+// lockfnrebounding.js, 
+// lockfnthrottling.js
 
 
 
 
 
 
-var lockfn =
-  ((typeof module === 'object') ? module : {}).exports = (function () {
 
-  return {
-    Queuing : lockfnqueuing,
-    Caching : lockfncaching,
-    Rebounding : lockfnrebounding,
-    Throttling : lockfnthrottling
-  };
-
-}());// Filename: lsn.js
+var lockfn = {
+  queuing : lockfnqueuing,
+  caching : lockfncaching,
+  expiring : lockfnexpiring,
+  rebounding : lockfnrebounding,
+  throttling : lockfnthrottling
+};
+// Filename: lsn.js
 // Timestamp: 2014.04.05-17:03:14 (last modified)  
 // Author(s): Bumblehead (www.bumblehead.com)
 
@@ -1174,7 +1321,7 @@ var lsn = (function (de, deffn, o, p) {
 
 
 // Filename: boxlet.js
-// Timestamp: 2014.05.11-17:56:59 (last modified)  
+// Timestamp: 2015.05.28-11:09:11 (last modified)  
 // Author(s): Bumblehead (www.bumblehead.com)
 // Requires: lsn.js, lockfn.js, elemst.js, domev.js,
 // beast.js, beastshape.js, beastfade.js, beastcolor.js, beastmove.js
@@ -1211,7 +1358,7 @@ var lsn = (function (de, deffn, o, p) {
 // +-----------------------------+
 //
 // +-----------------------------+
-// |▓ boxlet ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓ - ▓|
+// |  boxlet                  -  |
 // |▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓|
 // |▓▓▓▓ full content ▓▓▓▓▓▓▓▓▓▓▓|
 // |▓▓▓▓ foo bar baz ▓▓▓▓▓▓▓▓▓▓▓▓|
@@ -1226,6 +1373,15 @@ var boxlet = (function (boxengine) {
 
     var proto = {
       beast : null,
+
+      getContentFullElem : function (box) {
+        return box.getContentFullElem();
+      },
+
+      getContentPrevElem : function (box) {
+        return box.getContentPrevElem();
+      },      
+      
       fadeOut : function (box) {
         var that = this,
             beast = that.beast;
@@ -1234,12 +1390,12 @@ var boxlet = (function (boxengine) {
           beast.fade({
             classNameEnd : 'vis-hide',
             ease : 'end',
-            elem : box.getContentFullElem(), 
+            elem : that.getContentFullElem(box), 
             endop : 0
           }).fade({
             classNameEnd : 'vis-hide',
             ease : 'end',
-            elem : box.getContentPrevElem(), 
+            elem : that.getContentPrevElem(box), 
             endop : 0
           });
         }
@@ -1255,11 +1411,11 @@ var boxlet = (function (boxengine) {
         if (box) {
           beast.fade({
             classNameEnd : 'vis-show',
-            elem : box.getContentFullElem(), 
+            elem : that.getContentFullElem(box), 
             endop : 100
           }).fade({
             classNameEnd : 'vis-show',
-            elem : box.getContentPrevElem(), 
+            elem : that.getContentPrevElem(box), 
             endop : 100
           });
         }
@@ -1273,12 +1429,12 @@ var boxlet = (function (boxengine) {
 
         if (box) {
           beast.shape({
-            elem : box.getContentFullElem(),
+            elem : that.getContentFullElem(box),
             ease : 'end',
             whend : [null,0],
             classNameEnd : 'show-shut'
           }).shape({
-            elem : box.getContentPrevElem(),
+            elem : that.getContentPrevElem(box),
             ease : 'end',
             whbgn : [null,0],
             classNameEnd : 'show-open'
@@ -1294,12 +1450,12 @@ var boxlet = (function (boxengine) {
 
         if (box) {
           beast.shape({
-            elem : box.getContentFullElem(),
+            elem : that.getContentFullElem(box),
             ease : 'end',
             whbgn : [null,0],
             classNameEnd : 'show-open'
           }).shape({
-            elem : box.getContentPrevElem(),
+            elem : that.getContentPrevElem(box),
             ease : 'end',
             whend : [null,0],
             classNameEnd : 'show-shut'
@@ -1318,12 +1474,6 @@ var boxlet = (function (boxengine) {
           newbeast.init();
         });
 
-          /*
-        newbeast.init = function () {
-          that.init();
-        };
-           */
-
         return newbeast;
       },
 
@@ -1337,6 +1487,15 @@ var boxlet = (function (boxengine) {
     var p = function (opts) {
       var that = Object.create(proto);
       that.beast = beast(opts);
+
+      if (opts.getContentPrevElem) {
+        that.getContentPrevElem = opts.getContentPrevElem;
+      }
+
+      if (opts.getContentFullElem) {
+        that.getContentFullElem = opts.getContentFullElem;
+      }      
+
       return that;
     };
 
@@ -1442,7 +1601,7 @@ var boxlet = (function (boxengine) {
       var that = this, 
           boxTitleElem = that.getTitleElem();
 
-      that.reboundfn = lockfn.Rebounding.getNew();
+      that.reboundfn = lockfn.rebounding.getNew();
 
       lsn(boxTitleElem, 'click', function (e) {
         that.reboundSwitchState();

@@ -1,5 +1,5 @@
 // Filename: boxlet.js
-// Timestamp: 2015.04.08-19:28:48 (last modified)  
+// Timestamp: 2015.05.28-11:09:11 (last modified)  
 // Author(s): Bumblehead (www.bumblehead.com)
 // Requires: lsn.js, lockfn.js, elemst.js, domev.js,
 // beast.js, beastshape.js, beastfade.js, beastcolor.js, beastmove.js
@@ -51,6 +51,15 @@ var boxlet = ((typeof module === 'object') ? module : {}).exports = (function (b
 
     var proto = {
       beast : null,
+
+      getContentFullElem : function (box) {
+        return box.getContentFullElem();
+      },
+
+      getContentPrevElem : function (box) {
+        return box.getContentPrevElem();
+      },      
+      
       fadeOut : function (box) {
         var that = this,
             beast = that.beast;
@@ -59,12 +68,12 @@ var boxlet = ((typeof module === 'object') ? module : {}).exports = (function (b
           beast.fade({
             classNameEnd : 'vis-hide',
             ease : 'end',
-            elem : box.getContentFullElem(), 
+            elem : that.getContentFullElem(box), 
             endop : 0
           }).fade({
             classNameEnd : 'vis-hide',
             ease : 'end',
-            elem : box.getContentPrevElem(), 
+            elem : that.getContentPrevElem(box), 
             endop : 0
           });
         }
@@ -80,11 +89,11 @@ var boxlet = ((typeof module === 'object') ? module : {}).exports = (function (b
         if (box) {
           beast.fade({
             classNameEnd : 'vis-show',
-            elem : box.getContentFullElem(), 
+            elem : that.getContentFullElem(box), 
             endop : 100
           }).fade({
             classNameEnd : 'vis-show',
-            elem : box.getContentPrevElem(), 
+            elem : that.getContentPrevElem(box), 
             endop : 100
           });
         }
@@ -98,12 +107,12 @@ var boxlet = ((typeof module === 'object') ? module : {}).exports = (function (b
 
         if (box) {
           beast.shape({
-            elem : box.getContentFullElem(),
+            elem : that.getContentFullElem(box),
             ease : 'end',
             whend : [null,0],
             classNameEnd : 'show-shut'
           }).shape({
-            elem : box.getContentPrevElem(),
+            elem : that.getContentPrevElem(box),
             ease : 'end',
             whbgn : [null,0],
             classNameEnd : 'show-open'
@@ -119,12 +128,12 @@ var boxlet = ((typeof module === 'object') ? module : {}).exports = (function (b
 
         if (box) {
           beast.shape({
-            elem : box.getContentFullElem(),
+            elem : that.getContentFullElem(box),
             ease : 'end',
             whbgn : [null,0],
             classNameEnd : 'show-open'
           }).shape({
-            elem : box.getContentPrevElem(),
+            elem : that.getContentPrevElem(box),
             ease : 'end',
             whend : [null,0],
             classNameEnd : 'show-shut'
@@ -143,12 +152,6 @@ var boxlet = ((typeof module === 'object') ? module : {}).exports = (function (b
           newbeast.init();
         });
 
-          /*
-        newbeast.init = function () {
-          that.init();
-        };
-           */
-
         return newbeast;
       },
 
@@ -162,6 +165,15 @@ var boxlet = ((typeof module === 'object') ? module : {}).exports = (function (b
     var p = function (opts) {
       var that = Object.create(proto);
       that.beast = beast(opts);
+
+      if (opts.getContentPrevElem) {
+        that.getContentPrevElem = opts.getContentPrevElem;
+      }
+
+      if (opts.getContentFullElem) {
+        that.getContentFullElem = opts.getContentFullElem;
+      }      
+
       return that;
     };
 
